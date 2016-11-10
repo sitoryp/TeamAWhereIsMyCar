@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     protected Button aboutButton;
     protected Button storeLocation;
     protected LocationManager locationListener;
+
+    // variable to hold the location so it can easily be accessed and set after it is stored on SharedPreferences
     protected Location currentLocation;
 
     @Override
@@ -36,9 +38,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //this method calls the button's click to gather the location
         storeLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //setting the LocationManager and the services needed to get the location,
+                // also checking against user accepted permissions.
                 locationListener = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
@@ -55,35 +60,12 @@ public class MainActivity extends AppCompatActivity {
                 testing.setText(currentLocation.toString());
             }
         });
-
-
-
-//        locationListener = new LocationListener() {
-//            @Override
-//            public void onLocationChanged(Location location) {
-//
-//            }
-//
-//            @Override
-//            public void onStatusChanged(String provider, int status, Bundle extras) {
-//
-//            }
-//
-//            @Override
-//            public void onProviderEnabled(String provider) {
-//
-//            }
-//
-//            @Override
-//            public void onProviderDisabled(String provider) {
-//
-//            }
-//
-//        };
     }
 
 
 
+    //I created this method for all of the setup code for buttons views etc to
+    // keep it out of the top mixed in with all of the logic
     private void setupUI(){
         aboutButton = (Button)findViewById(R.id.aboutButton);
         storeLocation = (Button)findViewById(R.id.setLocationButton);
