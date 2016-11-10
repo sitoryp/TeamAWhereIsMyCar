@@ -13,8 +13,10 @@
     tools:context="mlb402.teamawhereismycar.MainActivity">
 
 
-
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="69dp"
+            android:id="@+id/testing" />
 
 
         <Button
