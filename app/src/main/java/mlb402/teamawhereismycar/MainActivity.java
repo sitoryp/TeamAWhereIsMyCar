@@ -2,10 +2,13 @@ package mlb402.teamawhereismycar;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,11 +17,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.Serializable;
+
 public class MainActivity extends AppCompatActivity {
 
     protected Button aboutButton;
     protected Button storeLocation;
+    protected Button findCar;
     protected LocationManager locationListener;
+    protected Parcel parcel;
 
     // variable to hold the location so it can easily be accessed and set after it is stored on SharedPreferences
     protected Location currentLocation;
@@ -60,6 +67,16 @@ public class MainActivity extends AppCompatActivity {
                 testing.setText(currentLocation.toString());
             }
         });
+
+        findCar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentLocation.writeToParcel(parcel, 0);
+                Intent intent = new Intent(MainActivity.this, FindCarActivity.class);
+                intent.putExtra("currentLocation", currentLocation);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -69,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
     private void setupUI(){
         aboutButton = (Button)findViewById(R.id.aboutButton);
         storeLocation = (Button)findViewById(R.id.setLocationButton);
+        findCar = (Button) findViewById(R.id.findCarButton);
+        parcel = Parcel.obtain();
 
         //adding this to request permission from the user. . .
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
