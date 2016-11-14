@@ -3,6 +3,7 @@ package mlb402.teamawhereismycar;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -15,6 +16,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
+import org.w3c.dom.Text;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,6 +28,12 @@ public class MainActivity extends AppCompatActivity {
     protected Button findCar;
     protected LocationManager locationListener;
     protected Parcel parcel;
+
+    // 3 variables required in order to store the location in the shared preferences. It
+    // required converting it to JSON string in order to save it.
+    public SharedPreferences.Editor preferences;
+    private Gson gson;
+    private String jsonLocation;
 
     // variable to hold the location so it can easily be accessed and set after it is stored on SharedPreferences
     protected Location currentLocation;
@@ -33,6 +44,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setupUI();
+        // getting the JSON sting back from the shared preferences.
+        jsonLocation = getPreferences(MODE_PRIVATE).getString("currentLocation", "");
+        // converting the JSON string back to the Location object to be used in the app.
+        currentLocation = gson.fromJson(jsonLocation, Location.class);
+
+        // printing the restored Location currentLocation to the testing TextView to verify. these 2 lines will be removed.
+        TextView testing = (TextView) findViewById(R.id.testing);
+        testing.setText(currentLocation.toString());
 
         aboutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +78,14 @@ public class MainActivity extends AppCompatActivity {
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
+
+                //collects the current location, converts it to JSON string and stores it in SharedPreferences.
                 currentLocation = locationListener.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                jsonLocation = gson.toJson(currentLocation);
+                preferences.putString("currentLocation", jsonLocation).apply();
+
+                //testing that the location was retrieved when the button was clicked. these 2 lines
+                // will be removed.
                 TextView testing = (TextView) findViewById(R.id.testing);
                 testing.setText(currentLocation.toString());
             }
@@ -85,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
         storeLocation = (Button)findViewById(R.id.setLocationButton);
         findCar = (Button) findViewById(R.id.findCarButton);
         parcel = Parcel.obtain();
+        preferences  = getPreferences(MODE_PRIVATE).edit();
+        gson = new Gson();
 
         //adding this to request permission from the user. . .
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
