@@ -122,4 +122,7 @@ public class MainActivity extends AppCompatActivity {
         //adding this to request permission from the user. . .
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
     }
+    public void onBackPressed(){
+        setContentView(R.layout.activity_main);
+    }
 }
