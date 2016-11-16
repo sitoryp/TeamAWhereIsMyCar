@@ -44,7 +44,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setupUI();
-        if (jsonLocation != null){
+        //checks to see if Shared preferences has the key value we are looking for
+        //if it does, it will store that value as the currentLocation.
+        if (getPreferences(MODE_PRIVATE).contains("currentLocation")){
             // getting the JSON sting back from the shared preferences.
             jsonLocation = getPreferences(MODE_PRIVATE).getString("currentLocation", "");
             // converting the JSON string back to the Location object to be used in the app.
@@ -52,10 +54,6 @@ public class MainActivity extends AppCompatActivity {
             // printing the restored Location currentLocation to the testing TextView to verify. these 2 lines will be removed.
             TextView testing = (TextView) findViewById(R.id.testing);
             testing.setText(currentLocation.toString());
-        }
-
-        else {
-
         }
 
         aboutButton.setOnClickListener(new View.OnClickListener() {
