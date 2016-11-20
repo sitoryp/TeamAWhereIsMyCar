@@ -26,7 +26,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        //getting the intent being passed in from the Main Activity.
         Intent intent = getIntent();
+        //setting the current location by retrieving it from the Parcel
         currentLocation = (Location)intent.getParcelableExtra("currentLocation");
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -49,10 +51,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        // setting the current location by getting the latitude and longitude from the Location object.
         LatLng current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        // Add a marker in Sydney and move the camera
+
+        //adding the marker and setting the camera / zoom to the marker.
         mMap.addMarker(new MarkerOptions().position(current).title("My Car is Here!"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current, 15));
+
+        //setting the zoom controls on the screen for a better user experience.
         mUiSettings = mMap.getUiSettings();
         mUiSettings.setZoomControlsEnabled(true);
         
