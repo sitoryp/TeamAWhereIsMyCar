@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   android:background="@drawable/worldbackground"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:layout_centerInParent="true"
+    android:gravity="center_vertical"
+    tools:context="mlb402.teamawhereismycar.MainActivity"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:id="@+id/testing"/>
+
+
+    <Button
+        android:id="@+id/findCarButton"
+        style="@android:style/Widget.Material.Light.Button.Inset"
+
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="25dp"
+
+        android:text="@string/find_car"
+        android:visibility="visible"
+        android:elevation="0dp" />
+
+    <Button
+        android:id="@+id/setLocationButton"
+        style="@android:style/Widget.Material.Light.Button.Inset"
+
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="25dp"
+       android:layout_margin="20dp"
+        android:text="@string/set_location"
+       />
+
+    <Button
+        android:id="@+id/aboutButton"
+
+
+        android:layout_width="160dp"
+
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="25dp"
+        android:text="@string/about"
+        style="@android:style/Widget.Material.Light.Button.Inset"
+        />
+
+
+</LinearLayout>
