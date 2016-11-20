@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 currentLocation.writeToParcel(parcel, 0);
-                Intent intent = new Intent(MainActivity.this, FindCarActivity.class);
+                Intent intent = new Intent(MainActivity.this, MapActivity.class);
                 intent.putExtra("currentLocation", currentLocation);
                 startActivity(intent);
             }
