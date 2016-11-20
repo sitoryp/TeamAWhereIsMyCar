@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -51,9 +52,7 @@ public class MainActivity extends AppCompatActivity {
             jsonLocation = getPreferences(MODE_PRIVATE).getString("currentLocation", "");
             // converting the JSON string back to the Location object to be used in the app.
             currentLocation = gson.fromJson(jsonLocation, Location.class);
-            // printing the restored Location currentLocation to the testing TextView to verify. these 2 lines will be removed.
-            TextView testing = (TextView) findViewById(R.id.testing);
-            testing.setText(currentLocation.toString());
+
         }
 
         aboutButton.setOnClickListener(new View.OnClickListener() {
@@ -86,11 +85,8 @@ public class MainActivity extends AppCompatActivity {
                 currentLocation = locationListener.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 jsonLocation = gson.toJson(currentLocation);
                 preferences.putString("currentLocation", jsonLocation).apply();
+                Toast.makeText(getBaseContext(), "Your Location has been stored!", Toast.LENGTH_LONG).show();
 
-                //testing that the location was retrieved when the button was clicked. these 2 lines
-                // will be removed.
-                TextView testing = (TextView) findViewById(R.id.testing);
-                testing.setText(currentLocation.toString());
             }
         });
 
