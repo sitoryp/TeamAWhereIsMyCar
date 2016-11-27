@@ -18,8 +18,9 @@ import com.google.gson.Gson;
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private Location currentLocation;
     private UiSettings mUiSettings;
+    private double currentLong;
+    private double currentLat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +29,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         //getting the intent being passed in from the Main Activity.
         Intent intent = getIntent();
+
         //setting the current location by retrieving it from the Parcel
-        currentLocation = (Location)intent.getParcelableExtra("currentLocation");
+        currentLat = intent.getDoubleExtra("Latitude", 0);
+        currentLong = intent.getDoubleExtra("Longitude", 0);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -52,7 +55,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mMap = googleMap;
 
         // setting the current location by getting the latitude and longitude from the Location object.
-        LatLng current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+        LatLng current = new LatLng(currentLat, currentLong);
 
         //adding the marker and setting the camera / zoom to the marker.
         mMap.addMarker(new MarkerOptions().position(current).title("My Car is Here!"));

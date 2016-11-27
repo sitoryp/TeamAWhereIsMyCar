@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Parcel;
 import android.support.v4.app.ActivityCompat;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.google.gson.Gson;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,11 +29,14 @@ public class MainActivity extends AppCompatActivity {
     // 3 variables required in order to store the location in the shared preferences. It
     // required converting it to JSON string in order to save it.
     public SharedPreferences.Editor preferences;
-    private Gson gson;
-    private String jsonLocation;
+
+    private LocationListener listener;
 
     // variable to hold the location so it can easily be accessed and set after it is stored on SharedPreferences
     protected Location currentLocation;
+
+    protected double currentLatitude;
+    protected double currentLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +46,49 @@ public class MainActivity extends AppCompatActivity {
         setupUI();
         //checks to see if Shared preferences has the key value we are looking for
         //if it does, it will store that value as the currentLocation.
-        if (getPreferences(MODE_PRIVATE).contains("currentLocation")){
-            // getting the JSON sting back from the shared preferences.
-            jsonLocation = getPreferences(MODE_PRIVATE).getString("currentLocation", "");
-            // converting the JSON string back to the Location object to be used in the app.
-            currentLocation = gson.fromJson(jsonLocation, Location.class);
+        if (getPreferences(MODE_PRIVATE).contains("Longitude") && getPreferences(MODE_PRIVATE).contains("Latitude")) {
+
+            currentLatitude = Double.longBitsToDouble(getPreferences(MODE_PRIVATE).getLong("Latitude", 0));
+            currentLongitude = Double.longBitsToDouble(getPreferences(MODE_PRIVATE).getLong("Longitude", 0));
 
         }
+
+        locationListener = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        //collects the current location, converts it to JSON string and stores it in SharedPreferences.
+        currentLocation = locationListener.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+        listener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                currentLongitude = location.getLongitude();
+                currentLatitude = location.getLatitude();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
 
         aboutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,10 +102,8 @@ public class MainActivity extends AppCompatActivity {
         storeLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //setting the LocationManager and the services needed to get the location,
-                // also checking against user accepted permissions.
-                locationListener = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
                     // here to request the missing permissions, and then overriding
@@ -74,12 +113,27 @@ public class MainActivity extends AppCompatActivity {
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
+                //requesting an update to the location when the button is clicked.
+                locationListener.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, listener);
+                Toast.makeText(getBaseContext(), "Location is being request requested please wait. . . ", Toast.LENGTH_SHORT).show();
 
-                //collects the current location, converts it to JSON string and stores it in SharedPreferences.
-                currentLocation = locationListener.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                jsonLocation = gson.toJson(currentLocation);
-                preferences.putString("currentLocation", jsonLocation).apply();
-                Toast.makeText(getBaseContext(), "Your Location has been stored!", Toast.LENGTH_LONG).show();
+
+                // put a timer from the requesting location updates until it is saved to ensure there is enough time to get a response.
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+
+
+                                preferences.putLong("Lat", Double.doubleToRawLongBits(currentLatitude));
+                                preferences.putLong("Long", Double.doubleToRawLongBits(currentLongitude));
+
+                                Toast.makeText(getBaseContext(), "Your location has been saved!", Toast.LENGTH_LONG).show();
+
+                            }
+                        },
+                2000);
+
 
             }
         });
@@ -89,7 +143,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 currentLocation.writeToParcel(parcel, 0);
                 Intent intent = new Intent(MainActivity.this, MapActivity.class);
-                intent.putExtra("currentLocation", currentLocation);
+//                intent.putExtra("Longitude", currentLocation);
+                intent.putExtra("Longitude", currentLongitude);
+                intent.putExtra("Latitude", currentLatitude);
                 startActivity(intent);
             }
         });
@@ -105,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
         findCar = (Button) findViewById(R.id.findCarButton);
         parcel = Parcel.obtain();
         preferences  = getPreferences(MODE_PRIVATE).edit();
-        gson = new Gson();
 
         //adding this to request permission from the user. . .
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
