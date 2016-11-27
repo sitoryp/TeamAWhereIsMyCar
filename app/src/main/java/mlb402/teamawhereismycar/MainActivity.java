@@ -1,7 +1,9 @@
 package mlb402.teamawhereismycar;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -103,38 +105,44 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                //requesting an update to the location when the button is clicked.
-                locationListener.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, listener);
-                Toast.makeText(getBaseContext(), "Location is being request requested please wait. . . ", Toast.LENGTH_SHORT).show();
-
-
-                // put a timer from the requesting location updates until it is saved to ensure there is enough time to get a response.
-                new android.os.Handler().postDelayed(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-
-
-                                preferences.putLong("Lat", Double.doubleToRawLongBits(currentLatitude));
-                                preferences.putLong("Long", Double.doubleToRawLongBits(currentLongitude));
-
-                                Toast.makeText(getBaseContext(), "Your location has been saved!", Toast.LENGTH_LONG).show();
-
-                            }
-                        },
-                2000);
-
-
+                dialog();
+//                if (!(currentLocation)) {
+//
+//                    if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                        // TODO: Consider calling
+//                        //    ActivityCompat#requestPermissions
+//                        // here to request the missing permissions, and then overriding
+//                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//                        //                                          int[] grantResults)
+//                        // to handle the case where the user grants the permission. See the documentation
+//                        // for ActivityCompat#requestPermissions for more details.
+//                        return;
+//                    }
+//                    //requesting an update to the location when the button is clicked.
+//                    locationListener.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, listener);
+//                    Toast.makeText(getBaseContext(), "Location is being request requested please wait. . . ", Toast.LENGTH_SHORT).show();
+//
+//
+//                    // put a timer from the requesting location updates until it is saved to ensure there is enough time to get a response.
+//                    new android.os.Handler().postDelayed(
+//                            new Runnable() {
+//                                @Override
+//                                public void run() {
+//
+//
+//                                    preferences.putLong("Lat", Double.doubleToRawLongBits(currentLatitude));
+//                                    preferences.putLong("Long", Double.doubleToRawLongBits(currentLongitude));
+//
+//                                    Toast.makeText(getBaseContext(), "Your location has been saved!", Toast.LENGTH_LONG).show();
+//
+//                                }
+//                            },
+//                            2000);
+//
+//
+//                }else{
+//                    dialog();
+//                }
             }
         });
 
@@ -165,7 +173,49 @@ public class MainActivity extends AppCompatActivity {
         //adding this to request permission from the user. . .
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
     }
+public void dialog(){
+     AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+    dialog.setTitle("Overwrite");
+    dialog.setMessage("Selecting Yes will overwrite the previous location. Are you sure you want to continue?");
+    dialog.setNegativeButton("No", null);
+    dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            //requesting an update to the location when the button is clicked.
+            locationListener.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, listener);
+            Toast.makeText(getBaseContext(), "Location is being request requested please wait. . . ", Toast.LENGTH_SHORT).show();
+
+
+            // put a timer from the requesting location updates until it is saved to ensure there is enough time to get a response.
+            new android.os.Handler().postDelayed(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+
+
+                            preferences.putLong("Lat", Double.doubleToRawLongBits(currentLatitude));
+                            preferences.putLong("Long", Double.doubleToRawLongBits(currentLongitude));
+
+                            Toast.makeText(getBaseContext(), "Your location has been saved!", Toast.LENGTH_LONG).show();
+
+                        }
+                    },
+                    2000);
+        }
+    }).create().show();
+}
     public void onBackPressed(){
-        setContentView(R.layout.activity_main);
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }
