@@ -106,43 +106,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 dialog();
-//                if (!(currentLocation)) {
-//
-//                    if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                        // TODO: Consider calling
-//                        //    ActivityCompat#requestPermissions
-//                        // here to request the missing permissions, and then overriding
-//                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//                        //                                          int[] grantResults)
-//                        // to handle the case where the user grants the permission. See the documentation
-//                        // for ActivityCompat#requestPermissions for more details.
-//                        return;
-//                    }
-//                    //requesting an update to the location when the button is clicked.
-//                    locationListener.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, listener);
-//                    Toast.makeText(getBaseContext(), "Location is being request requested please wait. . . ", Toast.LENGTH_SHORT).show();
-//
-//
-//                    // put a timer from the requesting location updates until it is saved to ensure there is enough time to get a response.
-//                    new android.os.Handler().postDelayed(
-//                            new Runnable() {
-//                                @Override
-//                                public void run() {
-//
-//
-//                                    preferences.putLong("Lat", Double.doubleToRawLongBits(currentLatitude));
-//                                    preferences.putLong("Long", Double.doubleToRawLongBits(currentLongitude));
-//
-//                                    Toast.makeText(getBaseContext(), "Your location has been saved!", Toast.LENGTH_LONG).show();
-//
-//                                }
-//                            },
-//                            2000);
-//
-//
-//                }else{
-//                    dialog();
-//                }
             }
         });
 

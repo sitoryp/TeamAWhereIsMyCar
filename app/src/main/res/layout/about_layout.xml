@@ -41,7 +41,7 @@
         android:id="@+id/developer_names"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/david_vignero_nbrad_munsch_ndarran_lewis_nluis_disla_nmarkus_gray_nnicholas_johnson_nscott_vorisek"
+        android:text="@string/names"
         android:textAlignment="center"
         android:textSize="20sp" />
 

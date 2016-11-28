@@ -4,7 +4,7 @@
     <string name="set_location">Set Location</string>
     <string name="about">About</string>
     <string name="about_description">This application is designed to help you locate your car. Once arriving to your destination select Set Location. This will store your location. Select Find Car when you are ready to navigate back to your vehicle. The application will use the last known location when you select Find Car. Thank you for using this application.</string>
-    <string name="david_vignero_nbrad_munsch_ndarran_lewis_nluis_disla_nmarkus_gray_nnicholas_johnson_nscott_vorisek">David Vignero\nBrad Munsch\nDarran Lewis\nLuis Disla\nMarkus Gray\nNicholas Johnson\nScott Vorisek</string>
+    <string name="names">David Vignero\nBrad Munsch\nDarran Lewis\nMarkus Gray\nNicholas Johnson\nScott Vorisek</string>
     <string name="developers">Developers</string>
     <string name="title_activity_find_car">FindCarActivity</string>
 
